@@ -1,0 +1,289 @@
+// ** React Imports
+import { useState, ReactNode, MouseEvent } from 'react'
+
+// ** Next Imports
+import Link from 'next/link'
+
+// ** MUI Components
+import Alert from '@mui/material/Alert'
+import MuiLink from '@mui/material/Link'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import Checkbox from '@mui/material/Checkbox'
+import TextField from '@mui/material/TextField'
+import InputLabel from '@mui/material/InputLabel'
+import IconButton from '@mui/material/IconButton'
+import Box, { BoxProps } from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import { styled, useTheme } from '@mui/material/styles'
+import FormHelperText from '@mui/material/FormHelperText'
+import InputAdornment from '@mui/material/InputAdornment'
+import Typography, { TypographyProps } from '@mui/material/Typography'
+import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
+
+// ** Icons Imports
+import Google from 'mdi-material-ui/Google'
+import Github from 'mdi-material-ui/Github'
+import Twitter from 'mdi-material-ui/Twitter'
+import Facebook from 'mdi-material-ui/Facebook'
+import EyeOutline from 'mdi-material-ui/EyeOutline'
+import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
+
+// ** Third Party Imports
+import * as yup from 'yup'
+import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+// ** Hooks
+import { useAuth } from 'src/hooks/useAuth'
+import useBgColor from 'src/@core/hooks/useBgColor'
+import { useSettings } from 'src/@core/hooks/useSettings'
+
+// ** Configs
+import themeConfig from 'src/configs/themeConfig'
+
+// ** Layout Import
+import BlankLayout from 'src/@core/layouts/BlankLayout'
+
+// ** Demo Imports
+import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
+
+// ** Styled Components
+const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+    padding: theme.spacing(20),
+    paddingRight: '0 !important',
+    [theme.breakpoints.down('lg')]: {
+        padding: theme.spacing(10)
+    }
+}))
+
+const LoginIllustration = styled('img')(({ theme }) => ({
+    maxWidth: '48rem',
+    [theme.breakpoints.down('xl')]: {
+        maxWidth: '38rem'
+    },
+    [theme.breakpoints.down('lg')]: {
+        maxWidth: '30rem'
+    }
+}))
+
+const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+        maxWidth: 500
+    },
+    [theme.breakpoints.up('lg')]: {
+        maxWidth: 800
+    }
+}))
+
+const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+    width: '100%',
+    [theme.breakpoints.down('md')]: {
+        maxWidth: 500
+    }
+}))
+
+const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
+    fontWeight: 600,
+    letterSpacing: '0.18px',
+    marginBottom: theme.spacing(1.5),
+    [theme.breakpoints.down('md')]: { marginTop: theme.spacing(8) }
+}))
+
+const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
+    '& .MuiFormControlLabel-label': {
+        fontSize: '0.875rem',
+        color: theme.palette.text.secondary
+    }
+}))
+
+const schema = yup.object().shape({
+    confirmPassword: yup.string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match'),
+    password: yup.string().min(5).required()
+})
+
+// const defaultValues = {
+//     password: 'password1',
+//     confirmPassword: 'faheel_khatri@hotmail.com'
+// }
+
+interface FormData {
+    email: string
+    password: string
+}
+
+const ChangePassword = () => {
+    const [showPassword, setShowPassword] = useState<boolean>(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
+
+    // ** Hooks
+    const auth = useAuth()
+    const theme = useTheme()
+    const bgClasses = useBgColor()
+    const { settings } = useSettings()
+    const hidden = useMediaQuery(theme.breakpoints.down('md'))
+
+    // ** Vars
+    const { skin } = settings
+
+    const {
+        control,
+        setError,
+        handleSubmit,
+        formState: { errors }
+    } = useForm({
+        // defaultValues,
+        mode: 'onBlur',
+        resolver: yupResolver(schema)
+    })
+
+    const onSubmit = (data: FormData) => {
+        const { email, password } = data
+
+        console.log(email, password)
+        // auth.login({ email, password }, () => {
+        //     setError('password', {
+        //         type: 'manual',
+        //         message: 'Email or Password is invalid'
+        //     })
+        // })
+    }
+
+
+    return (
+        <Box className='content-right'>
+            {!hidden ? (
+                <Box sx={{ flex: 1, display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
+                    <LoginIllustrationWrapper>
+                        <LoginIllustration
+                            alt='login-illustration'
+                            src={`/images/pages/logo.png`}
+                        />
+                    </LoginIllustrationWrapper>
+                </Box>
+            ) : null}
+            <RightWrapper sx={skin === 'bordered' && !hidden ? { borderLeft: `1px solid ${theme.palette.divider}` } : {}}>
+                <Box
+                    sx={{
+                        p: 7,
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'background.paper'
+                    }}
+                >
+                    <BoxWrapper sx={{ mr: 20 }}>
+                        <Box
+                            sx={{
+                                top: 30,
+                                left: 40,
+                                display: 'flex',
+                                position: 'absolute',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                        </Box>
+                        <Box sx={{ mb: 6 }}>
+                            <TypographyStyled variant='h3' color="secondary.main">Change Password</TypographyStyled>
+                            <Typography variant='body1'>
+                                Enter your new password
+                            </Typography>
+                        </Box>
+
+                        <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
+                            <FormControl fullWidth sx={{ mb: 4 }}>
+                                <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.password)}>
+                                    Password
+                                </InputLabel>
+                                <Controller
+                                    name='password'
+                                    control={control}
+                                    rules={{ required: true }}
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <OutlinedInput
+                                            value={value}
+                                            onBlur={onBlur}
+                                            label='Password'
+                                            onChange={onChange}
+                                            id='auth-login-v2-password'
+                                            error={Boolean(errors.password)}
+                                            type={showPassword ? 'text' : 'password'}
+                                            endAdornment={
+                                                <InputAdornment position='end'>
+                                                    <IconButton
+                                                        edge='end'
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={() => setShowPassword(!showPassword)}
+                                                    >
+                                                        {showPassword ? <EyeOutline /> : <EyeOffOutline />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            }
+                                        />
+                                    )}
+                                />
+                                {errors.password && (
+                                    <FormHelperText sx={{ color: 'error.main' }} id=''>
+                                        {errors.password.message}
+                                    </FormHelperText>
+                                )}
+                            </FormControl>
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor='auth-login-v2-confirmpassword' error={Boolean(errors.password)}>
+                                    Confirm Password
+                                </InputLabel>
+                                <Controller
+                                    name='confirmPassword'
+                                    control={control}
+                                    rules={{ required: true }}
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <OutlinedInput
+                                            value={value}
+                                            onBlur={onBlur}
+                                            label='Confirm Password'
+                                            onChange={onChange}
+                                            id='auth-login-v2-confirmpassword'
+                                            error={Boolean(errors.confirmPassword)}
+                                            type={showConfirmPassword ? 'text' : 'password'}
+                                            endAdornment={
+                                                <InputAdornment position='end'>
+                                                    <IconButton
+                                                        edge='end'
+                                                        onMouseDown={e => e.preventDefault()}
+                                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                                    >
+                                                        {showConfirmPassword ? <EyeOutline /> : <EyeOffOutline />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            }
+                                        />
+                                    )}
+                                />
+                                {errors.confirmPassword && (
+                                    <FormHelperText sx={{ color: 'error.main' }} id=''>
+                                        {errors.confirmPassword.message}
+                                    </FormHelperText>
+                                )}
+                            </FormControl>
+                            <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7, mt: 4 }} className="gradientBtn">
+                                Update
+                            </Button>
+                        </form>
+                    </BoxWrapper>
+                </Box>
+            </RightWrapper>
+        </Box>
+    )
+}
+
+ChangePassword.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+
+ChangePassword.guestGuard = true
+
+export default ChangePassword

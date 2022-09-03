@@ -1,0 +1,5 @@
+declare module 'react-to-pdf'
+declare module 'react-beautiful-dnd'
+declare module 'react-table'
+declare module 'styled-components'
+declare module 'module.css'
